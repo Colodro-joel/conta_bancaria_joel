@@ -1,23 +1,42 @@
 package com.senai.conta_bancaria_joel.application.dto;
 
 import com.senai.conta_bancaria_joel.domain.entity.Cliente;
+import com.senai.conta_bancaria_joel.domain.entity.ContaBancária;
 import com.senai.conta_bancaria_joel.domain.entity.ContaCorrente;
 
 import java.math.BigDecimal;
 
-public class ContaResumoDTO (
-    String nomeCliente;
-    String numeroConta;
-    BigDecimal saldo;
-){
+public record ContaResumoDTO (
+    String nomeCliente,
+    String numeroConta,
+    BigDecimal saldo
+) {
 
-    public Conta toEntity(Cliente cliente) {
-        if("CORRENTE".equalsIgnoreCase(tipo)) {
-            return new ContaCorrente(cliente);
-        } else if ("POUPANCA".equals(tipoConta())) {
-            return new ContaPoupanca(cliente);
+    public ContaBancária toEntity(Cliente cliente) {
+        if ("CORRENTE".equalsIgnoreCase(tipo)) {
+            return ContaCorrente.builder()
+                    .cliente(cliente)
+                    .numero(this.numero)
+                    .saldo(this.saldo)
+                    .ativa(true)
+                    .build();
+        } else if ("POUPANCA".equalsIgnoreCase(tipo)) {
+            return ContaCorrente.builder()
+                    .cliente(cliente)
+                    .numero(this.numero)
+                    .saldo(this.saldo)
+                    .ativa(true)
+                    .build();
+            return null;
         }
-        return tipoConta().equals(ContaCorrente.class) ?
-                new ContaCorrente(cliente) : new ContaPoupanca(cliente);
+
+    }
+
+    public static ContaResumoDTO fromEntity (Conta conta){
+            return new ContaResumoDTO(
+                    conta.getNumero(),
+                    conta.getTipo(),
+                    conta.getSaldo()
+            );
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public record ClienteDTO(
         String nome,
-        Long cpf,
+        String cpf,
         List<ContaBancária> contas
 ) {
         public static ClienteDTO fromEntity (Cliente cliente){
