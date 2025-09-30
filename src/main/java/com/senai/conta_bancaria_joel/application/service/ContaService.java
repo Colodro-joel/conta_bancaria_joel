@@ -17,9 +17,9 @@ import java.util.Optional;
 
 
 public class ContaService {
-        private final ContaRepository repository;
+        private final ContaService repository;
 
-        @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
         public List<ContaResumoDTO> listarTodasContas() {
             return repository.findAllByAtivaTrue().stream()
                     .filter(ContaBancária::isAtiva)
@@ -79,7 +79,7 @@ public class ContaService {
                 .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
     }
 
-    private ContaResumoDTO transferir(String numeroDaConta, TransferenciaDTO dto) {
+    public ContaResumoDTO transferir(String numeroDaConta, TransferenciaDTO dto) {
         ContaBancária contaOrigem = buscarContaAtivaPorNumero(numeroDaConta);
         ContaBancária contaDestino = buscarContaAtivaPorNumero(dto.contaDestino());
 

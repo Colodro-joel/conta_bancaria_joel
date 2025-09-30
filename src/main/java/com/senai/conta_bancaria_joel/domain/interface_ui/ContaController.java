@@ -32,8 +32,8 @@ public class ContaController {
 
     @PutMapping("/{numeroDaConta}")
     public ResponseEntity<ContaResumoDTO> atualizarConta(@PathVariable String numeroDaConta,
-                                                         @RequestBody ContaAtualizadoDTO dto) {
-        return ResponseEntity.ok(service.atualizarConta(numeroDaConta, dto)).build();
+                                                         @RequestBody ContaResumoDTO dto) {
+        return ResponseEntity.ok(service.atualizarConta(numeroDaConta, dto));
     }
 
     @DeleteMapping("/{numeroDaConta}")
