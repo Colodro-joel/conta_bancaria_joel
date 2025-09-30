@@ -49,4 +49,16 @@ public abstract class ContaBancária {
         }
         saldo = saldo.subtract(valor);
     }
+
+    public void depositar(BigDecimal valor) {
+        validatePositiveAmount(valor);
+        saldo = saldo.add(valor);
+    }
+
+    private static void validatePositiveAmount(BigDecimal valor) {
+        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException(" o valor do saque deve ser positivo.");
+        }
+    }
+
 }

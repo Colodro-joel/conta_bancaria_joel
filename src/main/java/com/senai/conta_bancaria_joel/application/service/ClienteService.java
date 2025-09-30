@@ -45,7 +45,7 @@ public class ClienteService {
 
         @GetMapping
         public ResponseEntity<ClienteResponseDTO> listarClientesAtivos() {
-            return repository
+            return repository;
         }
 
         @GetMapping
@@ -67,4 +67,4 @@ public class ClienteService {
         repository.save(cliente);
     }
 }
-}
+

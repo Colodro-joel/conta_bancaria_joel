@@ -38,8 +38,11 @@ public class ContaCorrente extends ContaBancária{
             BigDecimal totalSaque = valor.add(custoSaque);
 
             if (getSaldo().add(limite).compareTo(totalSaque)<0)
+                throw new IllegalArgumentException("saldo insuficiente para saque.");
 
-            super.sacar(valor);
+            setSaldo(getSaldo().subtract(totalSaque));
         }
+
+
 }
 
