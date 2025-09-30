@@ -1,7 +1,17 @@
 package com.senai.conta_bancaria_joel.domain.repository;
 
-import java.lang.ScopedValue;
+import com.senai.conta_bancaria_joel.domain.entity.Cliente;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ClienteRepository {
-    <T> ScopedValue<T> findByCpfAndAtivoTrue(String cpf);
-}
+import java.util.List;
+import java.util.Optional;
+
+
+@Repository
+public interface ClienteRepository extends JpaRepository<Cliente, String> {
+        Optional<Cliente> findByCpfAndAtivoTrue(String cpf);
+
+        List<Cliente> findAllByAtivoTrue();
+};
+

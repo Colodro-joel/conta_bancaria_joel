@@ -1,12 +1,15 @@
 package com.senai.conta_bancaria_joel.domain.interface_ui;
 
+import com.senai.conta_bancaria_joel.application.dto.ContaAtualizadoDTO;
 import com.senai.conta_bancaria_joel.application.dto.ContaResumoDTO;
+import com.senai.conta_bancaria_joel.application.dto.ValorSaqueDepositoDTO;
+import com.senai.conta_bancaria_joel.application.service.ContaService;
 import com.senai.conta_bancaria_joel.domain.entity.ContaBancária;
 import com.senai.conta_bancaria_joel.domain.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,20 +17,33 @@ import java.util.List;
 @RequestMapping("/api/conta")
 @RequiredArgsConstructor
 public class ContaController {
-    private final ContaRepository repository;
+    private final ContaService service;
 
-    @Transactional(readOnly = true)
-    public List<ContaResumoDTO> listarTodasContas() {
-        return repository.findAllByAtivaTrue().stream()
-                .filter(ContaBancária::isAtiva)
-                .map(ContaResumoDTO::fromEntity).toList();
+    @GetMapping
+    public ResponseEntity<List<ContaResumoDTO>> listarTodasContas(){
+        return ResponseEntity.ok(service.listarTodasContas());
     }
 
-    @Transactional(readOnly = true)
-    public ContaResumoDTO buscarContaPorNumero(String numero) {
-        return ContaResumoDTO.fromEntity(
-                repository.findByNumeroAndAtivaTrue(numero)
-                        .orElseThrow(() -> new RuntimeException("Conta não encontrada"))
-        );
+    @GetMapping ("/{numeroDaConta}")
+    public ResponseEntity<ContaResumoDTO> buscarContaPorNumero(String numeroDaConta){
+        return ResponseEntity.ok(service.buscarContaPorNumero(numeroDaConta));
+    }
+
+    @PutMapping("/{numeroDaConta}")
+    public ResponseEntity <ContaResumoDTO> atualizarConta(@PathVariable  String numeroDaConta,
+                                                          @RequestBody ContaAtualizadoDTO dto){
+        return ResponseEntity.ok(service.atualizarConta(numeroDaConta, dto)).build();
+    }
+
+    @DeleteMapping("/{numeroDaConta}")
+    public ResponseEntity<Void> deletarConta(@PathVariable String numeroDaConta) {
+        service.deletarConta(numeroDaConta);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{numeroDaConta}/sacar")
+    public ResponseEntity<ContaResumoDTO> sacar(@PathVariable String numeroDaConta,
+                                               @RequestBody ValorSaqueDepositoDTO dto) {
+        return ResponseEntity.ok(service.sacar(numeroDaConta, dto));
     }
 }
