@@ -40,6 +40,7 @@ public abstract class ContaBancária {
     public abstract String getTipo();
 
     public void sacar(BigDecimal valor) {
+        validatePositiveAmount(valor);
 
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("O valor de saque deve ser positivo.");
@@ -59,6 +60,14 @@ public abstract class ContaBancária {
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException(" o valor do saque deve ser positivo.");
         }
+    }
+
+    public void transferir(BigDecimal valor, ContaBancária contaDestino) {
+        if (this.id.equals(contaDestino.getId())) {
+            throw new IllegalArgumentException("Não é possivel transferir para a mesma conta");
+        }
+        this.sacar(valor);
+        contaDestino.depositar(valor);
     }
 
 }

@@ -7,29 +7,28 @@ import com.senai.conta_bancaria_joel.domain.entity.ContaBancária;
 import com.senai.conta_bancaria_joel.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria_joel.domain.entity.ContaPoupança;
 import com.senai.conta_bancaria_joel.domain.repository.ContaRepository;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public class ContaService {
-        private final ContaService repository;
+    private final ContaRepository repository;
+
+    public ContaService(ContaRepository repository) {
+        this.repository = repository;
+    }
 
     @Transactional(readOnly = true)
         public List<ContaResumoDTO> listarTodasContas() {
             return repository.findAllByAtivaTrue().stream()
-                    .filter(ContaBancária::isAtiva)
                     .map(ContaResumoDTO::fromEntity).toList();
         }
 
         @Transactional(readOnly = true)
         public ContaResumoDTO buscarContaPorNumero(String numero) {
             return ContaResumoDTO.fromEntity(
-                    repository.findAllByAtivaTrue(numero)
+                    repository.findByNumeroAndAtivaTrue(numero)
                             .orElseThrow(() -> new RuntimeException("Conta não encontrada"))
             );
         }
@@ -38,11 +37,11 @@ public class ContaService {
             ContaBancária conta = repository.findByNumeroAndAtivaTrue(numeroDaConta)
                     .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
-            if (conta instanceof ContaPoupança poupanca){
-                poupanca.setRendimento(dto.rendimento());
+            if (conta instanceof ContaPoupança poupança){
+                poupança.setRendimento(dto.rendimento());
             } else if (conta instanceof ContaCorrente corrente) {
                 corrente.setLimite(dto.limite());
-                corrente.setTaxaDeOperação(dto.taxaDeOperação());
+                corrente.setTaxa(dto.taxa());
             } else {
                 throw new RuntimeException("Tipo de conta desconhecido");
             }
