@@ -19,10 +19,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ContaCorrente extends ContaBancária{
 
-        @Column(precision = 4)
+        @Column(precision = 19, scale = 2)
         private BigDecimal limite;
 
-        @Column(precision = 5)
+        @Column(precision = 19, scale = 2)
         private BigDecimal taxa;
 
         @Override

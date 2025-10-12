@@ -10,7 +10,8 @@ import java.math.BigDecimal;
 public record ContaResumoDTO (
     String nomeCliente,
     String numeroConta,
-    BigDecimal saldo
+    BigDecimal saldo,
+    String tipo
 ) {
 
     public ContaBancária toEntity(Cliente cliente) {
@@ -36,11 +37,12 @@ public record ContaResumoDTO (
         return null;
     }
 
-    public static ContaResumoDTO fromEntity (ContaBancária conta){
+    public static ContaResumoDTO fromEntity (ContaResumoDTO conta){
             return new ContaResumoDTO(
                     conta.getNumero(),
-                    conta.getTipo(),
-                    conta.getSaldo()
+                    conta.getSaldo(),
+                    conta.getTipo()
             );
     }
+
 }

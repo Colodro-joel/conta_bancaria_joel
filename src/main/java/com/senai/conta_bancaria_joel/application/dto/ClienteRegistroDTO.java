@@ -5,7 +5,7 @@ import com.senai.conta_bancaria_joel.domain.entity.ContaBancária;
 
 import java.util.ArrayList;
 
-public class ClienteRegistroDTO(
+public record ClienteRegistroDTO(
     String nome,
     String cpf,
     ContaResumoDTO contaDTO

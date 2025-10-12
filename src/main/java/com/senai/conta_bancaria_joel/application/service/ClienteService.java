@@ -29,15 +29,15 @@ public class ClienteService {
             () -> repository.save(dto.toEntity())
         ); /* or else */
         var contas = cliente.getContas();
-        var novaconta = dto.conta().toEntity(cliente);
+        var novaConta = dto.contaDTO().toEntity(cliente);
         /*criar o metodo quando tiver completo tem que verficar se a abinha aprece*/
         boolean jatemtipo = contas.stream()
-                .anyMatch(c     -> c.getClass().equals(novaconta.getClass()) && c.istipoConta()
+                .anyMatch(c     -> c.getClass().equals(novaConta.getClass()) && c.getAtiva()
                 );
-        if (jaexiste)
+        if (jatemtipo)
             throw new RuntimeException("Cliente desse tipo já está cadastrado");
 
-        cliente.getContas().add(novaconta);
+        cliente.getContas().add(novaConta);
 
         return ClienteResponseDTO.fromEntity(repository.save(cliente));;
 

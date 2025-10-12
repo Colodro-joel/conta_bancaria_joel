@@ -28,17 +28,15 @@ public class ContaService {
         @Transactional(readOnly = true)
         public ContaResumoDTO buscarContaPorNumero(String numero) {
             return ContaResumoDTO.fromEntity(
-                    repository.findByNumeroAndAtivaTrue(numero)
-                            .orElseThrow(() -> new RuntimeException("Conta não encontrada"))
+                    buscarContaPorNumero(numero)
             );
         }
 
         public ContaResumoDTO atualizarConta(String numeroDaConta, ContaResumoDTO dto) {
-            ContaBancária conta = repository.findByNumeroAndAtivaTrue(numeroDaConta)
-                    .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+            ContaBancária conta = buscarContaAtivaPorNumero(numeroDaConta);
 
-            if (conta instanceof ContaPoupança poupança){
-                poupança.setRendimento(dto.rendimento());
+            if (conta instanceof ContaPoupança poupanca){
+                poupanca.setRendimento(dto.rendimento());
             } else if (conta instanceof ContaCorrente corrente) {
                 corrente.setLimite(dto.limite());
                 corrente.setTaxa(dto.taxa());
