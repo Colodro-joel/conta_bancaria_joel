@@ -1,15 +1,11 @@
-package com.senai.conta_bancaria_joel.domain.interface_ui;
+package com.senai.conta_bancaria_joel.interface_ui.Controller;
 
-import com.senai.conta_bancaria_joel.application.dto.ContaAtualizadoDTO;
 import com.senai.conta_bancaria_joel.application.dto.ContaResumoDTO;
 import com.senai.conta_bancaria_joel.application.dto.TransferenciaDTO;
 import com.senai.conta_bancaria_joel.application.dto.ValorSaqueDepositoDTO;
 import com.senai.conta_bancaria_joel.application.service.ContaService;
-import com.senai.conta_bancaria_joel.domain.entity.ContaBancária;
-import com.senai.conta_bancaria_joel.domain.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

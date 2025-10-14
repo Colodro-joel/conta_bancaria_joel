@@ -1,4 +1,4 @@
-package com.senai.conta_bancaria_joel.domain.interface_ui;
+package com.senai.conta_bancaria_joel.interface_ui.Controller;
 
 import com.senai.conta_bancaria_joel.application.dto.ClienteAtualizadoDTO;
 import com.senai.conta_bancaria_joel.application.dto.ClienteRegistroDTO;
