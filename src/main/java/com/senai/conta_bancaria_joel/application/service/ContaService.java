@@ -3,6 +3,9 @@ package com.senai.conta_bancaria_joel.application.service;
 import com.senai.conta_bancaria_joel.application.dto.ContaResumoDTO;
 import com.senai.conta_bancaria_joel.application.dto.TransferenciaDTO;
 import com.senai.conta_bancaria_joel.application.dto.ValorSaqueDepositoDTO;
+import com.senai.conta_bancaria_joel.domain.Exception.EntidadeNãoEncontradaException;
+import com.senai.conta_bancaria_joel.domain.Exception.RendimentoInvalidoException;
+import com.senai.conta_bancaria_joel.domain.Exception.TipodeContaInvalidaException;
 import com.senai.conta_bancaria_joel.domain.entity.ContaBancária;
 import com.senai.conta_bancaria_joel.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria_joel.domain.entity.ContaPoupança;
@@ -41,7 +44,7 @@ public class ContaService {
                 corrente.setLimite(dto.limite());
                 corrente.setTaxa(dto.taxa());
             } else {
-                throw new RuntimeException("Tipo de conta desconhecido");
+                throw new TipodeContaInvalidaException("");
             }
             conta.setSaldo(dto.saldo());
 
@@ -73,7 +76,7 @@ public class ContaService {
 
     private ContaBancária buscarContaAtivaPorNumero(String numero) {
         return repository.findByNumeroAndAtivaTrue(numero)
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+                .orElseThrow(() -> new EntidadeNãoEncontradaException("ContaBancária"));
     }
 
     public ContaResumoDTO transferir(String numeroDaConta, TransferenciaDTO dto) {
@@ -85,7 +88,15 @@ public class ContaService {
 
         repository.save(contaDestino);
         return ContaResumoDTO.fromEntity(repository.save(contaOrigem));
+    }
 
+    public ContaResumoDTO aplicarRendimento(String numero) {
+        ContaBancária conta = buscarContaAtivaPorNumero(numero);
+        if (conta instanceof ContaPoupança poupança) {
+            poupança.aplicarRendimento();
+            return ContaResumoDTO.fromEntity(repository.save(poupança));
+        }
+        throw new RendimentoInvalidoException("");
     }
 
 }

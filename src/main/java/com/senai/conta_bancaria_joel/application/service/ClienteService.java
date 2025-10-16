@@ -3,16 +3,14 @@ package com.senai.conta_bancaria_joel.application.service;
 import com.senai.conta_bancaria_joel.application.dto.ClienteAtualizadoDTO;
 import com.senai.conta_bancaria_joel.application.dto.ClienteRegistroDTO;
 import com.senai.conta_bancaria_joel.application.dto.ClienteResponseDTO;
+import com.senai.conta_bancaria_joel.domain.Exception.EntidadeNãoEncontradaException;
 import com.senai.conta_bancaria_joel.domain.entity.Cliente;
-import com.senai.conta_bancaria_joel.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria_joel.domain.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -53,18 +51,28 @@ public class ClienteService {
             return ResponseEntity.ok(service.buscarClienteAtivoPorCpf(cpf));
         }
 
-    public ClienteResponseDTO atualizarCliente(String cpf, ClienteAtualizadoDTO dto) {
+    public ClienteRepository atualizarCliente(String cpf, ClienteAtualizadoDTO dto) {
+        var cliente = buscarClientePorCpfAtivo(cpf);
+        cliente.setNome(dto.nome());
+        cliente.setCpf(dto.cpf());
+
+        return ClienteResponseDTO.fromEntity(repository.save(cliente));
     }
 
     public void deletarCliente(String cpf) {
-        var cliente = repository.findByCpfAndAtivoTrue(cpf).orElseThrow(
-                () -> new RuntimeException("Cliente não encontrado")
-        );
+        var cliente = buscarClientePorCpfAtivo(cpf);
         cliente.setAtivo(false);
         cliente.getContas().forEach(
-                conta ->conta.setAtiva(false)
+                contaBancária ->contaBancária.setAtiva(false)
         );
         repository.save(cliente);
+    }
+
+    private Cliente buscarClientePorCpfAtivo(String cpf) {
+        var cliente = repository.findByCpfAndAtivoTrue(cpf).orElseThrow(
+                () -> new EntidadeNãoEncontradaException("cliente")
+        );
+        return cliente;
     }
 }
 

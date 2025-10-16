@@ -8,8 +8,8 @@ import com.senai.conta_bancaria_joel.domain.entity.ContaPoupança;
 import java.math.BigDecimal;
 
 public record ContaResumoDTO (
-    String nomeCliente,
-    String numeroConta,
+    String nome,
+    String numero,
     BigDecimal saldo,
     String tipo
 ) {
@@ -18,7 +18,7 @@ public record ContaResumoDTO (
         if ("CORRENTE".equalsIgnoreCase(tipo)) {
             return ContaCorrente.builder()
                     .cliente(cliente)
-                    .numero(this.numeroConta)
+                    .numero(this.numero)
                     .saldo(this.saldo)
                     .taxa(new BigDecimal(0.05))
                     .limite(new BigDecimal(500.00))
@@ -27,7 +27,7 @@ public record ContaResumoDTO (
         } else if ("POUPANCA".equalsIgnoreCase(tipo)) {
             return ContaPoupança.builder()
                     .cliente(cliente)
-                    .numero(this.numeroConta)
+                    .numero(this.numero)
                     .saldo(this.saldo)
                     .rendimento(new BigDecimal(0.01))
                     .ativa(true)
