@@ -23,7 +23,7 @@ public class ClienteService {
         // Lógica para registrar o cliente
         // Por enquanto, retornamos um DTO de resposta vazio
 
-        var cliente = repository.findByCpfAndAtivoTrue(dto.cpf()).orElseGet(
+        var cliente = repository.findByCpfAndAtivoTrue().orElseGet(
             () -> repository.save(dto.toEntity())
         ); /* or else */
         var contas = cliente.getContas();
@@ -37,21 +37,24 @@ public class ClienteService {
 
         cliente.getContas().add(novaConta);
 
-        return ClienteResponseDTO.fromEntity(repository.save(cliente));;
+        return ClienteResponseDTO.fromEntity(repository.save(cliente));
 
     }
 
         @GetMapping
-        public ResponseEntity<ClienteResponseDTO> listarClientesAtivos() {
-            return repository;
+        public List<ClienteResponseDTO> listarClientesAtivos() {
+            return repository.findByCpfAndAtivoTrue().stream()
+                    .map(ClienteResponseDTO::fromEntity)
+                    .toList();
         }
 
         @GetMapping
-        public ResponseEntity<List<ClienteResponseDTO> buscarClienteAtivoPorCpf(@PathVariable String cpf) {
-            return ResponseEntity.ok(service.buscarClienteAtivoPorCpf(cpf));
+        public ClienteResponseDTO buscarClienteAtivoPorCpf(String cpf) {
+        var cliente = buscarClientePorCpfAtivo(cpf);
+            return ClienteResponseDTO.fromEntity(cliente);
         }
 
-    public ClienteRepository atualizarCliente(String cpf, ClienteAtualizadoDTO dto) {
+    public ClienteResponseDTO atualizarCliente(String cpf, ClienteAtualizadoDTO dto) {
         var cliente = buscarClientePorCpfAtivo(cpf);
         cliente.setNome(dto.nome());
         cliente.setCpf(dto.cpf());
@@ -69,7 +72,7 @@ public class ClienteService {
     }
 
     private Cliente buscarClientePorCpfAtivo(String cpf) {
-        var cliente = repository.findByCpfAndAtivoTrue(cpf).orElseThrow(
+        var cliente = repository.findByCpfAndAtivoTrue().orElseThrow(
                 () -> new EntidadeNãoEncontradaException("cliente")
         );
         return cliente;

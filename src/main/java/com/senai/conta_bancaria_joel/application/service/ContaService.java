@@ -22,7 +22,7 @@ public class ContaService {
         this.repository = repository;
     }
 
-    @Transactional(readOnly = true)
+        @Transactional(readOnly = true)
         public List<ContaResumoDTO> listarTodasContas() {
             return repository.findAllByAtivaTrue().stream()
                     .map(ContaResumoDTO::fromEntity).toList();
@@ -30,9 +30,7 @@ public class ContaService {
 
         @Transactional(readOnly = true)
         public ContaResumoDTO buscarContaPorNumero(String numero) {
-            return ContaResumoDTO.fromEntity(
-                    buscarContaPorNumero(numero)
-            );
+            return ContaResumoDTO.fromEntity(buscarContaAtivaPorNumero(numero));
         }
 
         public ContaResumoDTO atualizarConta(String numeroDaConta, ContaResumoDTO dto) {
@@ -96,7 +94,7 @@ public class ContaService {
             poupança.aplicarRendimento();
             return ContaResumoDTO.fromEntity(repository.save(poupança));
         }
-        throw new RendimentoInvalidoException("");
+        throw new RendimentoInvalidoException();
     }
 
 }

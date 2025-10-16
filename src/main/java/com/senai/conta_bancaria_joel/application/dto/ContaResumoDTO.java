@@ -4,14 +4,14 @@ import com.senai.conta_bancaria_joel.domain.entity.Cliente;
 import com.senai.conta_bancaria_joel.domain.entity.ContaBancária;
 import com.senai.conta_bancaria_joel.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria_joel.domain.entity.ContaPoupança;
+import com.senai.conta_bancaria_joel.domain.Exception.TipodeContaInvalidaException;
 
 import java.math.BigDecimal;
 
 public record ContaResumoDTO (
-    String nome,
     String numero,
-    BigDecimal saldo,
-    String tipo
+    String tipo,
+    BigDecimal saldo
 ) {
 
     public ContaBancária toEntity(Cliente cliente) {
@@ -37,11 +37,11 @@ public record ContaResumoDTO (
         return null;
     }
 
-    public static ContaResumoDTO fromEntity (ContaResumoDTO conta){
+    public static ContaResumoDTO fromEntity (ContaBancária conta){
             return new ContaResumoDTO(
                     conta.getNumero(),
-                    conta.getSaldo(),
-                    conta.getTipo()
+                    conta.getTipo(),
+                    conta.getSaldo()
             );
     }
 
