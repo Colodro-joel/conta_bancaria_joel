@@ -17,7 +17,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class ClienteController {
 
-    private final ClienteService service;
+    private ClienteService service;
 
     @PostMapping
     public ResponseEntity<ClienteResponseDTO> registrarCliente(@RequestBody ClienteRegistroDTO dto) {
@@ -31,9 +31,8 @@ public class ClienteController {
     public ResponseEntity<List<ClienteResponseDTO>> listarClientesAtivos(){
         return ResponseEntity.ok((List<ClienteResponseDTO>) service.listarClientesAtivos());
     }
-
     @GetMapping("/cpf/{cpf}")
-    public ResponseEntity<ResponseEntity<List<ClienteResponseDTO>>> buscarClienteAtivoPorCpf(@PathVariable String cpf){
+    public ResponseEntity<ClienteResponseDTO> buscarClienteAtivoPorCpf(@PathVariable String cpf){
         return ResponseEntity.ok(service.buscarClienteAtivoPorCpf(cpf));
     }
 
