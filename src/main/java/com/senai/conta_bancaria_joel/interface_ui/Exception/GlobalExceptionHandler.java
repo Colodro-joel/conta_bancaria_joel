@@ -1,9 +1,10 @@
-package com.senai.conta_bancaria_turma1.interface_ui.exception;
+package com.senai.conta_bancaria_joel.interface_ui.Exception;
 
 import com.senai.conta_bancaria_joel.domain.Exception.ContaMesmoTipoException;
-import com.senai.conta_bancaria_joel.domain.Exception.ValoresNegativosException;
+import com.senai.conta_bancaria_joel.domain.Exception.ValoresMenoresque0Exception;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -19,8 +20,8 @@ import java.util.Map;
 
     @RestControllerAdvice
     public class GlobalExceptionHandler {
-        @ExceptionHandler(ValoresNegativosException.class)
-        public ProblemDetail handleValoresNegativos (ValoresNegativosException ex,
+        @ExceptionHandler(ValoresMenoresque0Exception.class)
+        public ProblemDetail handleValoresNegativos (ValoresMenoresque0Exception ex,
                                                      HttpServletRequest request) {
             return ProblemDetailUtils.buildProblem(
                     HttpStatus.BAD_REQUEST,

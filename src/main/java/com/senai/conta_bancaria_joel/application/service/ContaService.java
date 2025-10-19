@@ -88,11 +88,11 @@ public class ContaService {
         return ContaResumoDTO.fromEntity(repository.save(contaOrigem));
     }
 
-    public ContaResumoDTO aplicarRendimento(String numero) {
-        ContaBancária conta = buscarContaAtivaPorNumero(numero);
-        if (conta instanceof ContaPoupança poupança) {
-            poupança.aplicarRendimento();
-            return ContaResumoDTO.fromEntity(repository.save(poupança));
+    public ContaResumoDTO aplicarRendimento(String numeroDaConta) {
+        var conta = buscarContaAtivaPorNumero(numeroDaConta);
+        if(conta instanceof ContaPoupança poupanca){
+            poupanca.aplicarRendimento();
+            return ContaResumoDTO.fromEntity(repository.save(conta));
         }
         throw new RendimentoInvalidoException();
     }

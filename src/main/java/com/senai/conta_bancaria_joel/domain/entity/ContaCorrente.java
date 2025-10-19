@@ -1,5 +1,7 @@
 package com.senai.conta_bancaria_joel.domain.entity;
 
+import com.senai.conta_bancaria_joel.domain.Exception.SaldoInsuficienteException;
+import com.senai.conta_bancaria_joel.domain.Exception.ValoresMenoresque0Exception;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -32,13 +34,13 @@ public class ContaCorrente extends ContaBancária{
 
         @Override
         public void sacar(BigDecimal valor) {
-            if (valor.compareTo(BigDecimal.ZERO)<0)
-                throw new IllegalArgumentException("valor de saque inválido.");
+            validatePositiveAmount(valor, "saque");
+
             BigDecimal custoSaque = valor.multiply(taxa);
             BigDecimal totalSaque = valor.add(custoSaque);
 
             if (getSaldo().add(limite).compareTo(totalSaque)<0)
-                throw new IllegalArgumentException("saldo insuficiente para saque.");
+                throw new SaldoInsuficienteException("saque");
 
             setSaldo(getSaldo().subtract(totalSaque));
         }

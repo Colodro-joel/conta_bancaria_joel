@@ -11,7 +11,10 @@ import java.math.BigDecimal;
 public record ContaResumoDTO (
     String numero,
     String tipo,
-    BigDecimal saldo
+    BigDecimal saldo,
+    BigDecimal limite,
+    BigDecimal taxa,
+    BigDecimal rendimento
 ) {
 
     public ContaBancária toEntity(Cliente cliente) {
@@ -20,8 +23,8 @@ public record ContaResumoDTO (
                     .cliente(cliente)
                     .numero(this.numero)
                     .saldo(this.saldo)
-                    .taxa(new BigDecimal(0.05))
-                    .limite(new BigDecimal(500.00))
+                    .taxa(new BigDecimal("0.05"))
+                    .limite(new BigDecimal("500.00"))
                     .ativa(true)
                     .build();
         } else if ("POUPANCA".equalsIgnoreCase(tipo)) {
@@ -29,19 +32,22 @@ public record ContaResumoDTO (
                     .cliente(cliente)
                     .numero(this.numero)
                     .saldo(this.saldo)
-                    .rendimento(new BigDecimal(0.01))
+                    .rendimento(new BigDecimal("0.01"))
                     .ativa(true)
                     .build();
         }
 
-        return null;
+        throw new TipodeContaInvalidaException(tipo);
     }
 
     public static ContaResumoDTO fromEntity (ContaBancária conta){
             return new ContaResumoDTO(
                     conta.getNumero(),
                     conta.getTipo(),
-                    conta.getSaldo()
+                    conta.getSaldo(),
+                    conta instanceof ContaCorrente cc ? cc.getLimite() : null,
+                    conta instanceof ContaCorrente cc ? cc.getTaxa() : null,
+                    conta instanceof ContaPoupança cp ? cp.getRendimento() : null
             );
     }
 
